@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Name'
+        required: true
+
+jobs:
+  release_macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install swift
+      uses: SwiftyLab/setup-swift@latest
+      with:
+        swift-version: "6.0.3"
+    - name: Build
+      run: |
+        swift build -c release --arch arm64
+        swift build -c release --arch x86_64
+        BIN_PATH_ARM=$(swift build -c release --arch arm64 --show-bin-path)
+        BIN_PATH_X86=$(swift build -c release --arch x86_64 --show-bin-path)
+        mkdir universal-output
+        lipo -create -output universal-output/swift-workflow-test $BIN_PATH_ARM/swift-workflow-test $BIN_PATH_X86/swift-workflow-test
+        zip -j swiftworkflowtest_macos_${{ github.ref_name }}.zip universal-output/swift-workflow-test
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: swiftworkflowtest_macos_${{ github.ref_name }}.zip
+
+  release_ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install swift
+      uses: SwiftyLab/setup-swift@latest
+      with:
+        swift-version: "6.0.3"
+    - name: Build
+      run: |
+        swift build -c release
+        BIN_PATH=$(swift build -c release --show-bin-path)
+        zip -j swiftworkflowtest_linux_${{ github.ref_name }}.zip $BIN_PATH/swift-workflow-test
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: swiftworkflowtest_linux_${{ github.ref_name }}.zip
+
+  release_windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install swift
+      uses: SwiftyLab/setup-swift@latest
+      with:
+        swift-version: "6.0.3"
+    - name: Build
+      run: |
+        swift build -c release --arch x86_64
+        move .build\x86_64-unknown-windows-msvc\release\swift-workflow-test.exe swift-workflow-test.exe
+        Compress-Archive -LiteralPath swift-workflow-test.exe -DestinationPath swiftworkflowtest_win64_${{ github.ref_name }}.zip
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: swiftworkflowtest_win64_${{ github.ref_name }}.zip

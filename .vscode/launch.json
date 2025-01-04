@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift-lldb",
+            "request": "launch",
+            "args": ["--name", "Sailor"],
+            "cwd": "${workspaceFolder:swift-workflow-test}",
+            "name": "Debug swift-workflow-test",
+            "program": "${workspaceFolder:swift-workflow-test}/.build/debug/swift-workflow-test",
+            "preLaunchTask": "swift: Build Debug swift-workflow-test"
+        },
+        {
+            "type": "swift-lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-workflow-test}",
+            "name": "Release swift-workflow-test",
+            "program": "${workspaceFolder:swift-workflow-test}/.build/release/swift-workflow-test",
+            "preLaunchTask": "swift: Build Release swift-workflow-test"
+        }
+    ]
+}

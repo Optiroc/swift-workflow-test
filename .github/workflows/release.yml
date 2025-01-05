@@ -46,7 +46,7 @@ jobs:
         swift-version: "6.0.3"
     - name: Build
       run: |
-        swift build -c release
+        swift build -c release --static-swift-stdlib
         BIN_PATH=$(swift build -c release --show-bin-path)
         zip -j swiftworkflowtest_linux_${{ github.ref_name }}.zip $BIN_PATH/swift-workflow-test
     - name: Release
@@ -66,7 +66,7 @@ jobs:
         swift-version: "6.0.3"
     - name: Build
       run: |
-        swift build -c release --arch x86_64
+        swift build -c release --static-swift-stdlib
         move .build\x86_64-unknown-windows-msvc\release\swift-workflow-test.exe swift-workflow-test.exe
         Compress-Archive -LiteralPath swift-workflow-test.exe -DestinationPath swiftworkflowtest_win64_${{ github.ref_name }}.zip
     - name: Release

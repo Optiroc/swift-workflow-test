@@ -15,11 +15,11 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Install swift
       uses: SwiftyLab/setup-swift@latest
       with:
-        swift-version: "6.0.3"
+        swift-version: "6.2.3"
     - name: Build
       run: |
         swift build -c release --arch arm64
@@ -39,11 +39,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Install swift
       uses: SwiftyLab/setup-swift@latest
       with:
-        swift-version: "6.0.3"
+        swift-version: "6.2.3"
     - name: Build
       run: |
         swift build -c release --static-swift-stdlib
@@ -59,11 +59,11 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Install swift
       uses: SwiftyLab/setup-swift@latest
       with:
-        swift-version: "6.0.3"
+        swift-version: "6.2.3"
     - name: Build
       run: |
         swift build -c release --static-swift-stdlib
